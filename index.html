@@ -32,16 +32,21 @@
       border: none;
     }
 
-    /* Styling for the notes inside the timeline boxes */
+    /* Standard Label Style */
+    .vis-label { font-size: 15px; font-weight: bold; }
+
+    /* RED Label Style for Departed Chickens */
+    .label-dead { color: #c62828 !important; }
+
+    /* Note styling within the timeline boxes */
     .event-note {
       display: block;
       font-size: 10px;
       margin-top: 4px;
-      opacity: 0.8;
-      line-height: 1.1;
+      font-weight: normal;
+      opacity: 0.9;
+      line-height: 1.2;
     }
-
-    .vis-label { font-size: 15px; font-weight: bold; }
 
     .vis-item.got-chicken { background-color: #d1f7d1 !important; border-color: #2e7d32 !important; }
     .vis-item.dead-missing { background-color: #f7d1d1 !important; border-color: #c62828 !important; color: #7f0000 !important; }
@@ -57,14 +62,15 @@
   <div id="visualization"></div>
 
   <script type="text/javascript">
+    // 1. Define Groups with "label-dead" class for specific chickens
     var groups = new vis.DataSet([
       { id: "Linda", content: "Linda" },
-      { id: "Seamus", content: "Seamus" },
-      { id: "Auroch", content: "Auroch" },
-      { id: "Lucian", content: "Lucian" },
-      { id: "Poirot", content: "Poirot" },
-      { id: "Pigeon 1 (Boncho)", content: "Pigeon 1 (Boncho)" },
-      { id: "Pigeon 2 (Overcoat)", content: "Pigeon 2 (Overcoat)" },
+      { id: "Seamus", content: "Seamus", className: "label-dead" },
+      { id: "Auroch", content: "Auroch", className: "label-dead" },
+      { id: "Lucian", content: "Lucian", className: "label-dead" },
+      { id: "Poirot", content: "Poirot", className: "label-dead" },
+      { id: "Pigeon 1 (Boncho)", content: "Pigeon 1 (Boncho)", className: "label-dead" },
+      { id: "Pigeon 2 (Overcoat)", content: "Pigeon 2 (Overcoat)", className: "label-dead" },
       { id: "Pigeon 3 (Young Guardian)", content: "Pigeon 3 (Young Guardian)" },
       { id: "Big Crow", content: "Big Crow" },
       { id: "Phoenix", content: "Phoenix" },
@@ -72,7 +78,6 @@
       { id: "Coward", content: "Coward" }
     ]);
 
-    // Function to format the box content with the note if it exists
     function formatContent(event, note) {
       if (!note || note === "NaN" || note === "") return `<b>${event}</b>`;
       return `<b>${event}</b><span class="event-note">${note}</span>`;
@@ -105,10 +110,10 @@
       height: '100%',
       timeAxis: { scale: 'week', step: 1 },
       start: '2025-06-25',
-      end: '2025-10-01', 
+      end: '2025-09-20', 
       stack: false,
       margin: {
-        item: { horizontal: 10, vertical: 45 }, // Even larger vertical margin for the multi-line text
+        item: { horizontal: 10, vertical: 40 }, 
         axis: 20
       },
       verticalScroll: true,
