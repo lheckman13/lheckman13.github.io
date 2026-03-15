@@ -10,14 +10,11 @@
 
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       overflow: hidden; 
-      display: flex;
-      flex-direction: column; /* Stacks header over timeline */
-      font-family: sans-serif;
+      display: flex; flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     header {
@@ -26,29 +23,26 @@
       border-bottom: 1px solid #ddd;
     }
 
-    h1 { margin: 0; font-size: 24px; color: #333; }
-    
-    .subtitle { 
-      margin: 5px 0 0 0; 
-      font-size: 14px; 
-      color: #666; 
-      font-style: italic; 
-    }
+    h1 { margin: 0; font-size: 22px; color: #333; }
+    .subtitle { margin: 4px 0 0 0; font-size: 13px; color: #666; font-style: italic; }
 
     #visualization {
-      flex-grow: 1; /* This tells the timeline to take up all remaining space */
+      flex-grow: 1;
       width: 100vw;
       border: none;
     }
 
-    /* Make the chicken names bold and easy to read */
-    .vis-label { 
-      font-size: 15px; 
-      font-weight: bold; 
-      background-color: #fcfcfc;
+    /* Styling for the notes inside the timeline boxes */
+    .event-note {
+      display: block;
+      font-size: 10px;
+      margin-top: 4px;
+      opacity: 0.8;
+      line-height: 1.1;
     }
 
-    /* Event Colors */
+    .vis-label { font-size: 15px; font-weight: bold; }
+
     .vis-item.got-chicken { background-color: #d1f7d1 !important; border-color: #2e7d32 !important; }
     .vis-item.dead-missing { background-color: #f7d1d1 !important; border-color: #c62828 !important; color: #7f0000 !important; }
   </style>
@@ -78,26 +72,32 @@
       { id: "Coward", content: "Coward" }
     ]);
 
+    // Function to format the box content with the note if it exists
+    function formatContent(event, note) {
+      if (!note || note === "NaN" || note === "") return `<b>${event}</b>`;
+      return `<b>${event}</b><span class="event-note">${note}</span>`;
+    }
+
     var items = new vis.DataSet([
-      { id: 0, group: "Linda", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
-      { id: 1, group: "Seamus", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
-      { id: 2, group: "Seamus", content: "missing", start: "2025-08-15", className: "dead-missing" },
-      { id: 3, group: "Auroch", content: "got chicken", start: "2025-07-15", className: "got-chicken" },
-      { id: 4, group: "Auroch", content: "missing", start: "2025-08-15", className: "dead-missing" },
-      { id: 5, group: "Auroch", content: "dead", start: "2026-03-07", className: "dead-missing", title: "Sour crop" },
-      { id: 6, group: "Lucian", content: "dead", start: "2025-08-15", className: "dead-missing" },
-      { id: 7, group: "Lucian", content: "got chicken", start: "2025-07-15", className: "got-chicken" },
-      { id: 8, group: "Poirot", content: "dead", start: "2025-08-06", className: "dead-missing" },
-      { id: 9, group: "Poirot", content: "got chicken", start: "2025-07-15", className: "got-chicken" },
-      { id: 10, group: "Pigeon 1 (Boncho)", content: "got chicken", start: "2025-08-15", className: "got-chicken" },
-      { id: 11, group: "Pigeon 1 (Boncho)", content: "dead", start: "2026-02-21", className: "dead-missing" },
-      { id: 12, group: "Pigeon 2 (Overcoat)", content: "got chicken", start: "2025-08-15", className: "got-chicken" },
-      { id: 13, group: "Pigeon 2 (Overcoat)", content: "dead", start: "2025-09-10", className: "dead-missing" },
-      { id: 14, group: "Pigeon 3 (Young Guardian)", content: "got chicken", start: "2025-08-15", className: "got-chicken" },
-      { id: 15, group: "Big Crow", content: "got chicken", start: "2025-09-28", className: "got-chicken" },
-      { id: 16, group: "Phoenix", content: "got chicken", start: "2025-09-28", className: "got-chicken" },
-      { id: 17, group: "Lavender", content: "got chicken", start: "2025-09-28", className: "got-chicken" },
-      { id: 18, group: "Coward", content: "got chicken", start: "2025-09-28", className: "got-chicken" }
+      { id: 0, group: "Linda", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 1, group: "Seamus", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 2, group: "Seamus", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
+      { id: 3, group: "Auroch", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 4, group: "Auroch", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
+      { id: 5, group: "Auroch", start: "2026-03-07", className: "dead-missing", content: formatContent("dead", "Sour crop - possibly murdered by us") },
+      { id: 6, group: "Lucian", start: "2025-08-15", className: "dead-missing", content: formatContent("dead", "Hawk ate her") },
+      { id: 7, group: "Lucian", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 8, group: "Poirot", start: "2025-08-06", className: "dead-missing", content: formatContent("dead") },
+      { id: 9, group: "Poirot", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 10, group: "Pigeon 1 (Boncho)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 11, group: "Pigeon 1 (Boncho)", start: "2026-02-21", className: "dead-missing", content: formatContent("dead", "est. date - unknown predator got her") },
+      { id: 12, group: "Pigeon 2 (Overcoat)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 13, group: "Pigeon 2 (Overcoat)", start: "2025-09-10", className: "dead-missing", content: formatContent("dead", "est. date") },
+      { id: 14, group: "Pigeon 3 (Young Guardian)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 15, group: "Big Crow", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 16, group: "Phoenix", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 17, group: "Lavender", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 18, group: "Coward", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") }
     ]);
 
     var options = {
@@ -105,11 +105,10 @@
       height: '100%',
       timeAxis: { scale: 'week', step: 1 },
       start: '2025-06-25',
-      end: '2025-09-15', 
+      end: '2025-10-01', 
       stack: false,
-      // Large vertical spacing
       margin: {
-        item: { horizontal: 10, vertical: 30 },
+        item: { horizontal: 10, vertical: 45 }, // Even larger vertical margin for the multi-line text
         axis: 20
       },
       verticalScroll: true,
