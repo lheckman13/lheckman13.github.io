@@ -21,8 +21,12 @@
       padding: 15px 20px;
       background-color: #ffffff;
       border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
+    .titles { flex-grow: 1; }
     h1 { margin: 0; font-size: 22px; color: #333; }
     .subtitle { margin: 4px 0 0 0; font-size: 13px; color: #666; font-style: italic; }
 
@@ -32,102 +36,35 @@
       border: none;
     }
 
-    /* Standard Label Style */
     .vis-label { font-size: 15px; font-weight: bold; }
-
-    /* RED Label Style for confirmed dead chickens only */
     .label-dead { color: #c62828 !important; }
 
-    /* Note styling: Space + Parentheses */
     .event-note {
       display: block;
       font-size: 11px;
-      margin-top: 8px; /* Added more space between text and note */
+      margin-top: 8px;
       font-weight: normal;
       opacity: 0.85;
       line-height: 1.2;
     }
 
     .vis-item.got-chicken { background-color: #d1f7d1 !important; border-color: #2e7d32 !important; }
-    /* Both dead and missing boxes stay red for visibility, but labels differ */
     .vis-item.dead-missing { background-color: #f7d1d1 !important; border-color: #c62828 !important; color: #7f0000 !important; }
-    
     .vis-current-time { background-color: #ff0000; width: 2px; }
+
+    #music-btn {
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Chicken Events Timeline</h1>
-    <p class="subtitle">Arrivals and "Departures"</p>
-  </header>
-
-  <div id="visualization"></div>
-
-  <script type="text/javascript">
-    // GROUPS: Only chickens with the 'dead' event get the 'label-dead' class
-    var groups = new vis.DataSet([
-      { id: "Linda", content: "Linda" },
-      { id: "Seamus", content: "Seamus" }, // Missing, not dead (stays black)
-      { id: "Auroch", content: "Auroch", className: "label-dead" },
-      { id: "Lucian", content: "Lucian", className: "label-dead" },
-      { id: "Poirot", content: "Poirot", className: "label-dead" },
-      { id: "Pigeon 1 (Boncho)", content: "Pigeon 1 (Boncho)", className: "label-dead" },
-      { id: "Pigeon 2 (Overcoat)", content: "Pigeon 2 (Overcoat)", className: "label-dead" },
-      { id: "Pigeon 3 (Young Guardian)", content: "Pigeon 3 (Young Guardian)" },
-      { id: "Big Crow", content: "Big Crow" },
-      { id: "Phoenix", content: "Phoenix" },
-      { id: "Lavender", content: "Lavender" },
-      { id: "Coward", content: "Coward" }
-    ]);
-
-    // Formatter: Space + (Note)
-    function formatContent(event, note) {
-      if (!note || note === "NaN" || note === "") return `<b>${event}</b>`;
-      return `<b>${event}</b> <span class="event-note">(${note})</span>`;
-    }
-
-    var items = new vis.DataSet([
-      { id: 0, group: "Linda", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 1, group: "Seamus", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 2, group: "Seamus", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
-      { id: 3, group: "Auroch", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 4, group: "Auroch", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
-      { id: 5, group: "Auroch", start: "2026-03-07", className: "dead-missing", content: formatContent("dead", "Sour crop - possibly murdered by us trying to cure sour crop") },
-      { id: 6, group: "Lucian", start: "2025-08-15", className: "dead-missing", content: formatContent("dead", "Hawk ate her. White feathers are really bad camoflague, her fault really") },
-      { id: 7, group: "Lucian", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 8, group: "Poirot", start: "2025-08-06", className: "dead-missing", content: formatContent("dead", "too beautiful for this world" },
-      { id: 9, group: "Poirot", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 10, group: "Pigeon 1 (Boncho)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 11, group: "Pigeon 1 (Boncho)", start: "2026-02-21", className: "dead-missing", content: formatContent("dead", "est. date - unknown predator got her") },
-      { id: 12, group: "Pigeon 2 (Overcoat)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 13, group: "Pigeon 2 (Overcoat)", start: "2025-09-10", className: "dead-missing", content: formatContent("dead", "est. date. Sickness? Forgot we had this one whoops sorry.") },
-      { id: 14, group: "Pigeon 3 (Young Guardian)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 15, group: "Big Crow", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 16, group: "Phoenix", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 17, group: "Lavender", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
-      { id: 18, group: "Coward", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") }
-    ]);
-
-    var options = {
-      width: '100%',
-      height: '100%',
-      showCurrentTime: true,
-      timeAxis: { scale: 'week', step: 1 },
-      start: '2025-06-25',
-      end: '2025-10-01', 
-      stack: false,
-      margin: {
-        item: { horizontal: 10, vertical: 50 }, 
-        axis: 20
-      },
-      verticalScroll: true,
-      zoomKey: 'ctrlKey',
-      orientation: 'top'
-    };
-
-    var container = document.getElementById('visualization');
-    var timeline = new vis.Timeline(container, items, groups, options);
-  </script>
-</body>
-</html>
+    <div class="titles">
+        <h1>Chicken Events Timeline</h1>
+        <p class="subtitle">Arrivals and "Departures"</
