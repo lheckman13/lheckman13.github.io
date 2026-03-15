@@ -15,28 +15,50 @@
       width: 100%;
       height: 100%;
       overflow: hidden; 
+      display: flex;
+      flex-direction: column; /* Stacks header over timeline */
+      font-family: sans-serif;
+    }
+
+    header {
+      padding: 15px 20px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    h1 { margin: 0; font-size: 24px; color: #333; }
+    
+    .subtitle { 
+      margin: 5px 0 0 0; 
+      font-size: 14px; 
+      color: #666; 
+      font-style: italic; 
     }
 
     #visualization {
+      flex-grow: 1; /* This tells the timeline to take up all remaining space */
       width: 100vw;
-      height: 100vh; /* Takes up 100% of the vertical screen */
       border: none;
     }
 
-    /* Make the chicken name labels larger and vertically centered */
+    /* Make the chicken names bold and easy to read */
     .vis-label { 
-      font-size: 16px; 
+      font-size: 15px; 
       font-weight: bold; 
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
+      background-color: #fcfcfc;
     }
 
+    /* Event Colors */
     .vis-item.got-chicken { background-color: #d1f7d1 !important; border-color: #2e7d32 !important; }
     .vis-item.dead-missing { background-color: #f7d1d1 !important; border-color: #c62828 !important; color: #7f0000 !important; }
   </style>
 </head>
 <body>
+
+  <header>
+    <h1>Chicken Events Timeline</h1>
+    <p class="subtitle">Arrivals and "Departures"</p>
+  </header>
 
   <div id="visualization"></div>
 
@@ -56,7 +78,6 @@
       { id: "Coward", content: "Coward" }
     ]);
 
-    // Data items remain the same...
     var items = new vis.DataSet([
       { id: 0, group: "Linda", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
       { id: 1, group: "Seamus", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
@@ -84,18 +105,14 @@
       height: '100%',
       timeAxis: { scale: 'week', step: 1 },
       start: '2025-06-25',
-      end: '2025-08-15', 
-      
-      // VERTICAL SETTINGS
-      stack: false, // Keeps events on one line per chicken
+      end: '2025-09-15', 
+      stack: false,
+      // Large vertical spacing
       margin: {
-        item: {
-          horizontal: 10,
-          vertical: 20  // Increases space between the event and the row border
-        },
+        item: { horizontal: 10, vertical: 30 },
         axis: 20
       },
-      verticalScroll: true, // In case you add so many chickens they go off-screen
+      verticalScroll: true,
       zoomKey: 'ctrlKey',
       orientation: 'top'
     };
