@@ -9,22 +9,29 @@
   <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 
   <style>
-    /* This removes all margins and ensures the page fills the browser */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden; /* Prevents double scrollbars */
+      overflow: hidden; 
     }
 
     #visualization {
-      width: 100vw;   /* 100% of Viewport Width */
-      height: 100vh;  /* 100% of Viewport Height */
+      width: 100vw;
+      height: 100vh; /* Takes up 100% of the vertical screen */
       border: none;
     }
 
-    /* Styling for your chicken events */
+    /* Make the chicken name labels larger and vertically centered */
+    .vis-label { 
+      font-size: 16px; 
+      font-weight: bold; 
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+    }
+
     .vis-item.got-chicken { background-color: #d1f7d1 !important; border-color: #2e7d32 !important; }
     .vis-item.dead-missing { background-color: #f7d1d1 !important; border-color: #c62828 !important; color: #7f0000 !important; }
   </style>
@@ -49,6 +56,7 @@
       { id: "Coward", content: "Coward" }
     ]);
 
+    // Data items remain the same...
     var items = new vis.DataSet([
       { id: 0, group: "Linda", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
       { id: 1, group: "Seamus", content: "got chicken", start: "2025-06-30", className: "got-chicken" },
@@ -74,13 +82,21 @@
     var options = {
       width: '100%',
       height: '100%',
-      // Force the axis to show Weeks and Days
       timeAxis: { scale: 'week', step: 1 },
-      // Set the initial zoom view to be quite wide (spread out)
       start: '2025-06-25',
-      end: '2025-08-01', 
-      stack: false,
-      margin: { item: 10, axis: 5 },
+      end: '2025-08-15', 
+      
+      // VERTICAL SETTINGS
+      stack: false, // Keeps events on one line per chicken
+      margin: {
+        item: {
+          horizontal: 10,
+          vertical: 20  // Increases space between the event and the row border
+        },
+        axis: 20
+      },
+      verticalScroll: true, // In case you add so many chickens they go off-screen
+      zoomKey: 'ctrlKey',
       orientation: 'top'
     };
 
