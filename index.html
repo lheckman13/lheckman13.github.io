@@ -67,4 +67,106 @@
   <header>
     <div class="titles">
         <h1>Chicken Events Timeline</h1>
-        <p class="subtitle">Arrivals and "Departures. 'In the arms of the angels' will be playing here when I get around to it."</
+        <p class="subtitle">Arrivals and "Departures". 'In the Arms of the Angels' will be playing here when I get around to it.</p>
+    </div>
+    <button id="music-btn">🔇 Music Off</button>
+  </header>
+
+  <audio id="memorial-music" loop>
+    <source src="angel.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="visualization"></div>
+
+  <script type="text/javascript">
+    // MUSIC LOGIC
+    const audio = document.getElementById('memorial-music');
+    const btn = document.getElementById('music-btn');
+
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play();
+        btn.innerText = "🔊 Music On";
+      } else {
+        audio.pause();
+        btn.innerText = "🔇 Music Off";
+      }
+    }
+
+    window.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            btn.innerText = "🔊 Music On";
+        }
+    }, { once: true });
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMusic();
+    });
+
+    // GROUPS
+    var groups = new vis.DataSet([
+      { id: "Linda", content: "Linda" },
+      { id: "Seamus", content: "Seamus" }, 
+      { id: "Auroch", content: "Auroch", className: "label-dead" },
+      { id: "Lucian", content: "Lucian", className: "label-dead" },
+      { id: "Poirot", content: "Poirot", className: "label-dead" },
+      { id: "Pigeon 1 (Boncho)", content: "Pigeon 1 (Boncho)", className: "label-dead" },
+      { id: "Pigeon 2 (Overcoat)", content: "Pigeon 2 (Overcoat)", className: "label-dead" },
+      { id: "Pigeon 3 (Young Guardian)", content: "Pigeon 3 (Young Guardian)" },
+      { id: "Big Crow", content: "Big Crow" },
+      { id: "Phoenix", content: "Phoenix" },
+      { id: "Lavender", content: "Lavender" },
+      { id: "Coward", content: "Coward" }
+    ]);
+
+    function formatContent(event, note) {
+      if (!note || note === "NaN" || note === "") return `<b>${event}</b>`;
+      return `<b>${event}</b> <span class="event-note">(${note})</span>`;
+    }
+
+    var items = new vis.DataSet([
+      { id: 0, group: "Linda", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 1, group: "Seamus", start: "2025-06-30", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 2, group: "Seamus", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
+      { id: 3, group: "Auroch", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 4, group: "Auroch", start: "2025-08-15", className: "dead-missing", content: formatContent("missing") },
+      { id: 5, group: "Auroch", start: "2026-03-07", className: "dead-missing", content: formatContent("dead", "Sour crop - possibly murdered by us trying to cure sour crop") },
+      { id: 6, group: "Lucian", start: "2025-08-15", className: "dead-missing", content: formatContent("dead", "Hawk ate her. White feathers are really bad camouflage, her fault really") },
+      { id: 7, group: "Lucian", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 8, group: "Poirot", start: "2025-08-06", className: "dead-missing", content: formatContent("dead", "too beautiful for this world") }, // FIXED: Added closing parenthesis here
+      { id: 9, group: "Poirot", start: "2025-07-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 10, group: "Pigeon 1 (Boncho)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 11, group: "Pigeon 1 (Boncho)", start: "2026-02-21", className: "dead-missing", content: formatContent("dead", "est. date - unknown predator got her") },
+      { id: 12, group: "Pigeon 2 (Overcoat)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 13, group: "Pigeon 2 (Overcoat)", start: "2025-09-10", className: "dead-missing", content: formatContent("dead", "est. date. Sickness? Forgot we had this one whoops sorry.") },
+      { id: 14, group: "Pigeon 3 (Young Guardian)", start: "2025-08-15", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 15, group: "Big Crow", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 16, group: "Phoenix", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 17, group: "Lavender", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") },
+      { id: 18, group: "Coward", start: "2025-09-28", className: "got-chicken", content: formatContent("got chicken") }
+    ]);
+
+    var options = {
+      width: '100%',
+      height: '100%',
+      showCurrentTime: true,
+      timeAxis: { scale: 'week', step: 1 },
+      start: '2025-06-25',
+      end: '2025-10-01', 
+      stack: false,
+      margin: {
+        item: { horizontal: 10, vertical: 55 }, 
+        axis: 20
+      },
+      verticalScroll: true,
+      zoomKey: 'ctrlKey',
+      orientation: 'top'
+    };
+
+    var container = document.getElementById('visualization');
+    var timeline = new vis.Timeline(container, items, groups, options);
+  </script>
+</body>
+</html>
